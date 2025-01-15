@@ -1,27 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dthap\\Dev\\school\\S10266136_PRG2Assignment\\S10266136_PRG2Assignment.csproj": {}
+    "C:\\Users\\theresa\\source\\repos\\Prg 2\\Prg2_assignment\\S10266136_PRG2Assignment.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dthap\\Dev\\school\\S10266136_PRG2Assignment\\S10266136_PRG2Assignment.csproj": {
+    "C:\\Users\\theresa\\source\\repos\\Prg 2\\Prg2_assignment\\S10266136_PRG2Assignment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dthap\\Dev\\school\\S10266136_PRG2Assignment\\S10266136_PRG2Assignment.csproj",
+        "projectUniqueName": "C:\\Users\\theresa\\source\\repos\\Prg 2\\Prg2_assignment\\S10266136_PRG2Assignment.csproj",
         "projectName": "S10266136_PRG2Assignment",
-        "projectPath": "C:\\Users\\dthap\\Dev\\school\\S10266136_PRG2Assignment\\S10266136_PRG2Assignment.csproj",
-        "packagesPath": "C:\\Users\\dthap\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dthap\\Dev\\school\\S10266136_PRG2Assignment\\obj\\",
+        "projectPath": "C:\\Users\\theresa\\source\\repos\\Prg 2\\Prg2_assignment\\S10266136_PRG2Assignment.csproj",
+        "packagesPath": "C:\\Users\\theresa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\theresa\\source\\repos\\Prg 2\\Prg2_assignment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dthap\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\theresa\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {}
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -59,7 +60,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

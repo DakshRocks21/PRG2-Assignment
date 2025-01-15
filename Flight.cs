@@ -9,10 +9,36 @@ namespace S10266136_PRG2Assignment
     class Flight
     {
 
-        public string flightNumber { get; set; }
+        public string FlightNumber { get; set; }
+        public string Origin { get; set; }
+        public string Destination { get; set; }
+        public DateTime ExpectedTime { get; set; }
+        public string Status { get; set; }
 
-        public string flightNumber { get; set; }
-        public string flightNumber { get; set; }
+        public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string status)
+        {
+            FlightNumber = flightNumber;
+            Origin = origin;
+            Destination = destination;
+            ExpectedTime = expectedTime;
+            Status = status;
+        }
+
+        public double CalculateFees()
+        {
+            // Calculate the fees
+            return 0;
+        }
+
+
+
+        public override string ToString()
+        {
+            return $"Flight Number: {FlightNumber}\nOrigin: {Origin}\nDestination: {Destination}\nExpected Time: {ExpectedTime}\nStatus: {Status}";
+        }
+
+
+
 
 
     }
