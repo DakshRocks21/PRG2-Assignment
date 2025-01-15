@@ -17,18 +17,17 @@ namespace S10266136_PRG2Assignment
 
         public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string status)
         {
-            FlightNumber = flightNumber;
-            Origin = origin;
-            Destination = destination;
-            ExpectedTime = expectedTime;
-            Status = status;
+            this.FlightNumber = flightNumber;
+            this.Origin = origin;
+            this.Destination = destination;
+            this.ExpectedTime = expectedTime;
+            this.Status = status;
         }
         public abstract double CalculateFees();
 
         public override string ToString()
         {
-            return $"Flight Number: {FlightNumber}\nOrigin: {Origin}\nDestination: {Destination}\nExpected Time: {ExpectedTime}\nStatus: {Status}";
+            return $"Flight Number: {this.FlightNumber}\nOrigin: {this.Origin}\nDestination: {this.Destination}\nExpected Time: {this.ExpectedTime}\nStatus: {this.Status}";
         }
-
     }
 }
