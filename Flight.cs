@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S10266136_PRG2Assignment
 {
-    class Flight
+    abstract class Flight
     {
 
         public string FlightNumber { get; set; }
@@ -27,7 +27,7 @@ namespace S10266136_PRG2Assignment
         public double CalculateFees()
         {
             // Calculate the fees
-            return 0;
+            return;
         }
 
 
