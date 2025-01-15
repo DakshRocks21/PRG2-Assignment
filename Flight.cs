@@ -27,7 +27,7 @@ namespace S10266136_PRG2Assignment
         public double CalculateFees()
         {
             // Calculate the fees
-            return;
+            return 0.0;
         }
 
 
