@@ -23,14 +23,7 @@ namespace S10266136_PRG2Assignment
             ExpectedTime = expectedTime;
             Status = status;
         }
-
-        public double CalculateFees()
-        {
-            // Calculate the fees
-            return 0.0;
-        }
-
-
+        public abstract double CalculateFees();
 
         public override string ToString()
         {
