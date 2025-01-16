@@ -15,6 +15,14 @@ namespace S10266136_PRG2Assignment
         public bool SupportsLWTT { get; set; }
         public Flight Flight { get; set; }
 
+        public BoardingGate(string gateName, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
+        {
+            GateName = gateName;
+            SupportsCFFT = supportsCFFT;
+            SupportsDDJB = supportsDDJB;
+            SupportsLWTT = supportsLWTT;
+        }
+
         public double CalculateFees()
         {
             if (Flight == null)
@@ -32,15 +40,15 @@ namespace S10266136_PRG2Assignment
             return baseFee;
         }
 
-        // TODO: Current ToString is for Debugging :D
         public override string ToString()
         {
-            string supportInfo = $"Supports: "
-                + (SupportsCFFT ? "CFFT " : "")
-                + (SupportsDDJB ? "DDJB " : "")
-                + (SupportsLWTT ? "LWTT " : "");
-            string flightInfo = Flight != null ? $"Assigned Flight: {Flight.FlightNumber}" : "No flight assigned";
-            return $"{GateName} - {supportInfo}- {flightInfo}";
+            return $"""
+            Boarding Gate Name: {GateName}
+            Supports DDJB: {SupportsDDJB}
+            Supports CFFT: {SupportsCFFT}
+            Supports LWTT: {SupportsLWTT}
+            """;
         }
+
     }
 }
