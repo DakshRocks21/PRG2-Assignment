@@ -1,4 +1,12 @@
-﻿namespace S10266136_PRG2Assignment
+﻿//==========================================================
+// Student Number	: S10266136
+// Student Name	: Daksh Thapar
+// Partner Name	: Chua Xiang Qi Theresa
+//==========================================================
+
+
+namespace S10266136_PRG2Assignment
+
 {
     class Program
     {
@@ -18,13 +26,14 @@
                 switch (menuOption)
                 {
                     case 0:
+                        // Done
+                        Console.WriteLine("Goodbye!");
                         return;
                     case 1:
                         // Task 3 - Daksh (Done)
                         ListAllFlights(terminal);
                         break;
                     case 2:
-                        //terminal.ListBoardingFlights();
                         break;
                     case 3:
                         // Task 5 - Daksh (Done)
@@ -36,13 +45,18 @@
                         break;
                     case 5:
                         break;
-                    default:
-                        Console.WriteLine("Something went wrong");
+                    case 6:
+                        break;
+                    case 7:
+                        // Task 9 - Daksh (Done)
+                        DisplayFlightsForDay(terminal); 
                         break;
                 }
 
             }
         }
+
+
 
         static void DisplayMenu()
         {
@@ -61,6 +75,42 @@
 
         """);
         }
+
+
+        static void DisplayFlightsForDay(Terminal terminal)
+        {
+
+
+            List<Flight> flightList = new List<Flight>(terminal.Flights.Values);
+            flightList.Sort();
+
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"Flight Schedule for {terminal.TerminalName}");
+            Console.WriteLine("=============================================");
+            Console.WriteLine("Flight Number \t Airline Name \t\t Origin \t\t Destination \t\t Expected Departure/Arrival Time \t Status \t Boarding Gate");
+
+
+            foreach (var flight in terminal.Flights.Values)
+            {
+                Airline airline = terminal.GetAirlineFromFlight(flight);
+                string boardingGateForFlight = null;
+                foreach (KeyValuePair<string, BoardingGate> kvp in terminal.BoardingGates)
+                {
+                    BoardingGate boardingGate = kvp.Value;
+                    if (boardingGate.Flight != null && boardingGate.Flight.FlightNumber == flight.FlightNumber)
+                    {
+                        boardingGateForFlight = boardingGate.GateName;
+                        break;
+                    }
+                    else
+                    {
+                        boardingGateForFlight = "Unassigned";
+                    }
+                }
+                Console.WriteLine($"{flight.FlightNumber,-16} {airline.Name,-23} {flight.Origin,-23} {flight.Destination,-23} {flight.ExpectedTime, -39} {flight.Status, -16}{boardingGateForFlight}");
+            }
+        }
+
         static void CreateNewFlight(Terminal terminal, string flightsFilePath)
         {
             while (true)
@@ -219,6 +269,8 @@
             }
 
             Console.WriteLine(terminal.Flights[flightNumber].ToString());
+            string reqcode = terminal.Flights[flightNumber].GetType().Name.Substring(0, 4);
+            Console.WriteLine($"Special Request Code: {(reqcode == "NORM" ? "None" :  reqcode)}");
             Console.WriteLine(terminal.BoardingGates[boardingGate].ToString());
 
             Console.WriteLine("\nWould you like to update the status of the flight? (Y/N):");
