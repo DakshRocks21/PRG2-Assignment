@@ -34,6 +34,7 @@ namespace S10266136_PRG2Assignment
 
             total += requestFee; // Add special request fee
             return total;
+
         }
         public override string ToString()
         {

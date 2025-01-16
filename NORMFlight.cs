@@ -30,6 +30,7 @@ namespace S10266136_PRG2Assignment
                 total += 800;
             }
             return total;
+
         }
 
         public override string ToString()
