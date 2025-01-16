@@ -1,6 +1,4 @@
-﻿using System.Buffers.Text;
-
-namespace S10266136_PRG2Assignment
+﻿namespace S10266136_PRG2Assignment
 {
     class Program
     {
@@ -9,47 +7,8 @@ namespace S10266136_PRG2Assignment
             Terminal terminal = new Terminal();
             terminal.TerminalName = "Changi Airport Terminal 5";
 
-<<<<<<< HEAD
             // Task 1 & 2;
             InitValues(terminal, "airlines.csv", "boardinggates.csv", "flights.csv");
-=======
-            // Task 1 - Your Welcome !
-            string[] airlineLines = File.ReadAllLines("airlines.csv");
-
-            for (int i = 1; i < airlineLines.Length; i++)
-            {
-                string line = airlineLines[i];
-                string[] parts = line.Split(',');
-                Airline airline = new Airline
-                {
-                    Name = parts[0],
-                    Code = parts[1]
-                };
-                terminal.AddAirline(airline);
-            }
-
-            // Task 1 Boarding Gates - Theresa (Done)
-            string[] boardingGatesSpecialReq = File.ReadAllLines("boardingGates.csv");
-
-            for (int i = 1;i < boardingGatesSpecialReq.Length; i++)
-            {
-                string line = boardingGatesSpecialReq[i];
-                string[] parts = line.Split(',');
-                BoardingGate boardingGate = new BoardingGate
-                {
-                    GateName = parts[0],
-                    SupportsCFFT = bool.Parse(parts[1]),
-                    SupportsDDJB = bool.Parse(parts[2]), 
-                    SupportsLWTT = bool.Parse(parts[3])
-                };
-                terminal.AddBoardingGate(boardingGate);
-            }
-
-
-            // Task 2 - Daksh (Done)
-            terminal.LoadFlights("flights.csv");
->>>>>>> 8b745457fe73f7691dd30598876ce041658472c1
-
 
             while (true)
             {
