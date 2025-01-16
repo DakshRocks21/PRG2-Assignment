@@ -27,7 +27,7 @@ namespace S10266136_PRG2Assignment
 
         public override string ToString()
         {
-            return $"Flight Number: {this.FlightNumber}\nOrigin: {this.Origin}\nDestination: {this.Destination}\nExpected Time: {this.ExpectedTime}\nSpecial Request Code: {this.Status}";
+            return $"Flight Number: {this.FlightNumber}\nOrigin: {this.Origin}\nDestination: {this.Destination}\nExpected Time: {this.ExpectedTime}\nStatus: {this.Status}";
         }
     }
 }

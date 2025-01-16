@@ -32,9 +32,10 @@
                         break;
                     case 4:
                         // Task 6 - Daksh (Done)
-                        CreateNewFlight(terminal, "airlines.csv");
+                        CreateNewFlight(terminal, "flights.csv");
                         break;
-
+                    case 5:
+                        break;
                     default:
                         Console.WriteLine("Something went wrong");
                         break;
@@ -42,7 +43,6 @@
 
             }
         }
-
 
         static void DisplayMenu()
         {
@@ -73,6 +73,33 @@
                 Console.WriteLine("Enter Flight Number:");
                 string flightNumber = Console.ReadLine()?.Trim();
 
+
+                if (!flightNumber.Contains(" ") || flightNumber.Split(' ')[0].Length != 2)
+                {
+                    Console.WriteLine("Error: Flight should be in the format (ID XXXX), where ID is the airlines and XXX is the flight number");
+                    Console.WriteLine("\n\n\n");
+                    continue;
+                }
+
+                if (terminal.Flights.ContainsKey(flightNumber))
+                {
+                    Console.WriteLine($"Error: Flight Number '{flightNumber}' already exists. Cannot add duplicate flights.");
+                    Console.WriteLine("\n\n\n");
+                    continue;
+                }
+
+                try
+                {
+                    string test = terminal.Airlines[flightNumber.Split(' ')[0]].ToString();
+                }
+                catch (KeyNotFoundException)
+                {
+                    Console.WriteLine($"Error: Airline {flightNumber.Split(' ')[0]} not found! ");
+                    Console.WriteLine("\n\n\n");
+                    continue;
+                }
+
+
                 Console.WriteLine("Enter Origin:");
                 string origin = Console.ReadLine()?.Trim();
 
@@ -82,9 +109,9 @@
                 DateTime expectedTime;
                 while (true)
                 {
-                    Console.WriteLine("Enter Expected Departure/Arrival Time (dd/MM/yyyy HH:mm):");
+                    Console.WriteLine("Enter Expected Departure/Arrival Time (hh:mm tt) (04:00 pm):");
                     string timeInput = Console.ReadLine()?.Trim();
-                    if (DateTime.TryParseExact(timeInput, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out expectedTime))
+                    if (DateTime.TryParseExact(timeInput, "hh:mm tt", null, System.Globalization.DateTimeStyles.None, out expectedTime))
                     {
                         break;
                     }
@@ -104,10 +131,10 @@
                     specialRequestCode = GetInputFromConsole(() =>
                     {
                         Console.WriteLine("""
-                                Enter Special Request Code:
-                                1. LWTT
-                                2. DDJB
-                                3. CFFT
+                            Enter Special Request Code:
+                            1. LWTT
+                            2. DDJB
+                            3. CFFT
                             """);
                     }, "Select a code (1-3):", 1, 3);
                 }
@@ -120,20 +147,15 @@
                     _ => new NORMFlight(flightNumber, origin, destination, expectedTime, "None")
                 };
 
-                if (!terminal.Flights.ContainsKey(flightNumber))
-                {
-                    terminal.Flights.Add(flightNumber, flight);
-                }
-                else
-                {
-                    Console.WriteLine($"Error: Flight Number '{flightNumber}' already exists. Cannot add duplicate flights.");
-                    continue;
-                }
+                terminal.Flights.Add(flightNumber, flight);
+                terminal.Airlines[flightNumber.Split(' ')[0]].AddFlight(flight);
+
                 try
                 {
                     using (StreamWriter sw = File.AppendText(flightsFilePath))
                     {
-                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime:dd/MM/yyyy HH:mm},{specialRequestCode}";
+                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime:hh:mm tt}," +
+                            $"{(specialRequestCode == 0 ? "" : specialRequestCode == 1 ? "LWTT" : specialRequestCode == 2 ? "DDJB" : "CFFT")}";
                         sw.WriteLine(newFlightEntry);
                     }
                 }
@@ -141,6 +163,7 @@
                 {
                     Console.WriteLine($"Error writing to file: {ex.Message}");
                 }
+
 
                 Console.WriteLine($"Flight {flightNumber} has been successfully added!");
 
@@ -239,8 +262,11 @@
 
         static void InitValues(Terminal terminal, string airlinesFilePath, string boardingGatesFilePath, string flightsFilePath)
         {
+            // Task 1 - Theresa (Done)
             LoadAirlines(terminal, airlinesFilePath);
             LoadBoardingGates(terminal, boardingGatesFilePath);
+
+            // Task 2 - Daksh (Done)
             LoadFlights(terminal, flightsFilePath);
         }
         static int GetInputFromConsole(Action displayAction, string prompt, int lowerBound, int upperBound)
@@ -248,7 +274,6 @@
             /*
              * SUPPORTS NUMBERS ONLY!
              */
-
             int result;
             while (true)
             {
@@ -368,10 +393,12 @@
             Console.WriteLine("=============================================");
             Console.WriteLine("Flight Number \t Airline Name \t\t Origin \t\t Destination \t\t Expected Departure/Arrival Time");
 
+
             foreach (var flight in terminal.Flights.Values)
             {
                 Airline airline = terminal.GetAirlineFromFlight(flight);
-                Console.WriteLine($"{flight.FlightNumber,-16} {airline.Name,-23} {flight.Origin,-23} {flight.Destination,-23} {flight.ExpectedTime:dd/MM/yyyy hh:mm:ss tt}");
+
+                Console.WriteLine($"{flight.FlightNumber,-16} {airline.Name,-23} {flight.Origin,-23} {flight.Destination,-23} {flight.ExpectedTime}");
             }
         }
 
