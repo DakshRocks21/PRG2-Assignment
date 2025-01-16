@@ -14,10 +14,26 @@ namespace S10266136_PRG2Assignment
         {
             RequestFee = requestFee;
         }
+
         //LWTT Request Fee
         public override double CalculateFees()
         {
-            return RequestFee = 500;
+
+            double baseFees = 300; // Boarding Gate Base Fee
+            double total = baseFees;
+            double requestFee = 500; // Request Fee
+
+            if (Destination == "Singapore") 
+            {
+                total += 500; 
+            }
+            else 
+            {
+                total += 800; 
+            }
+
+            total += requestFee; // Add special request fee
+            return total;
         }
         public override string ToString()
         {

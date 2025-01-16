@@ -15,22 +15,21 @@ namespace S10266136_PRG2Assignment
         public override double CalculateFees()
         {
             
+            // Both Arriving Flight Terminal Fees = 500
+            // 300 is the base fee
 
-            // Arriving Flight Terminal Fees
+            double baseFees = 300;
+            double total = baseFees;
+
             if (Destination == "Singapore")
-                return 500 + 300;
+            {
+                total += 500;
+            }
             else
-                return 300;
-
-            // Departing Flight Terminal Fees
-            if (Origin == "Singapore")
-                return 800 + 300;
-            else
-                return 300;
-
-            
-
-            
+            {
+                total += 800;
+            }
+            return total;
         }
 
         public override string ToString()
