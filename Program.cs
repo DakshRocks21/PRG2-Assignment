@@ -1,4 +1,6 @@
-﻿namespace S10266136_PRG2Assignment
+﻿using System.Buffers.Text;
+
+namespace S10266136_PRG2Assignment
 {
     class Program
     {
@@ -21,6 +23,24 @@
                 };
                 terminal.AddAirline(airline);
             }
+
+            // Task 1 Boarding Gates - Theresa (Done)
+            string[] boardingGatesSpecialReq = File.ReadAllLines("boardingGates.csv");
+
+            for (int i = 1;i < boardingGatesSpecialReq.Length; i++)
+            {
+                string line = boardingGatesSpecialReq[i];
+                string[] parts = line.Split(',');
+                BoardingGate boardingGate = new BoardingGate
+                {
+                    GateName = parts[0],
+                    SupportsCFFT = parts[1] == "Y",
+                    SupportsDDJB = parts[2] == "Y",
+                    SupportsLWTT = parts[3] == "Y"
+                };
+                terminal.AddBoardingGate(boardingGate);
+            }
+
 
             // Task 2 - Daksh (Done)
             terminal.LoadFlights("flights.csv");
