@@ -34,9 +34,9 @@ namespace S10266136_PRG2Assignment
                 BoardingGate boardingGate = new BoardingGate
                 {
                     GateName = parts[0],
-                    SupportsCFFT = parts[1] == "Y",
-                    SupportsDDJB = parts[2] == "Y",
-                    SupportsLWTT = parts[3] == "Y"
+                    SupportsCFFT = bool.Parse(parts[1]),
+                    SupportsDDJB = bool.Parse(parts[2]), 
+                    SupportsLWTT = bool.Parse(parts[3])
                 };
                 terminal.AddBoardingGate(boardingGate);
             }
