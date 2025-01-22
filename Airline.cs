@@ -43,7 +43,7 @@ namespace S10266136_PRG2Assignment
 
         public double CalculateFees()
         {
-            double fees = 0;
+           double fees = 0;
 
            foreach (Flight flight in Flights.Values)
             {
