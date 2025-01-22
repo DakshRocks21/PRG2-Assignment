@@ -25,19 +25,8 @@ namespace S10266136_PRG2Assignment
 
         public double CalculateFees()
         {
-            if (Flight == null)
-            {
-                return 0.0;
-            }
 
-            double baseFee = 100.0;
-
-            // TODO
-            if (SupportsCFFT && Flight.Status == "CFFT") baseFee += 50.0;
-            if (SupportsDDJB && Flight.Status == "DDJB") baseFee += 40.0;
-            if (SupportsLWTT && Flight.Status == "LWTT") baseFee += 30.0;
-
-            return baseFee;
+            return Flight.CalculateFees();
         }
 
         public override string ToString()

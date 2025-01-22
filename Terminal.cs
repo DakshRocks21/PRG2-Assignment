@@ -8,7 +8,7 @@ namespace S10266136_PRG2Assignment
 {
     class Terminal
     {
-        public string TerminalName { get; set; }
+        public string TerminalName { get; set; } = "Default Terminal";
         public Dictionary<string, Airline> Airlines { get; set; }
 
         public Dictionary<string, Flight> Flights { get; set; }

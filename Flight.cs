@@ -24,7 +24,21 @@ namespace S10266136_PRG2Assignment
             this.ExpectedTime = expectedTime;
             this.Status = status;
         }
-        public abstract double CalculateFees();
+        public virtual double CalculateFees()
+        {
+            // I did this because a flight cannot take off and land in singapore!
+            if (Destination == "Singapore (SIN)")
+            {
+                return 500.0;
+            }
+            if (Origin == "Singapore (SIN)")
+            {
+                return 800.0;
+            }
+
+            return 0.0;
+
+        }
 
         public override string ToString()
         {

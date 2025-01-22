@@ -15,23 +15,8 @@ namespace S10266136_PRG2Assignment
         }
         public override double CalculateFees()
         {
-            
-            // Both Arriving Flight Terminal Fees = 500
-            // 300 is the base fee
-
-            double baseFees = 300;
-            double total = baseFees;
-
-            if (Destination == "Singapore")
-            {
-                total += 500;
-            }
-            else
-            {
-                total += 800;
-            }
-            return total;
-
+            // Base + gate fee
+            return base.CalculateFees() + 300.0;
         }
 
         public override string ToString()

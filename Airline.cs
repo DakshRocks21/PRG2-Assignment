@@ -18,12 +18,12 @@ namespace S10266136_PRG2Assignment
         }
 
 
-  
+
         public bool AddFlight(Flight flight)
         {
             if (flight == null || Flights.ContainsKey(flight.FlightNumber))
             {
-                return false; 
+                return false;
             }
 
             Flights.Add(flight.FlightNumber, flight);
@@ -34,7 +34,7 @@ namespace S10266136_PRG2Assignment
         {
             if (flight == null || !Flights.ContainsKey(flight.FlightNumber))
             {
-                return false; 
+                return false;
             }
 
             Flights.Remove(flight.FlightNumber);
@@ -43,9 +43,46 @@ namespace S10266136_PRG2Assignment
 
         public double CalculateFees()
         {
-            // TODO: Finish this class
-            return 0.0; 
-           
+            double fees = 0;
+
+           foreach (Flight flight in Flights.Values)
+            {
+                fees += flight.CalculateFees();
+            }
+
+
+            if (Flights.Count >= 5)
+            {
+                fees *= 0.97;
+            }
+
+            // int/int = int :D
+            fees -= (Flights.Count / 3) * 350.0;
+
+
+            foreach (var flight in Flights.Values)
+            {
+                if (flight.ExpectedTime.TimeOfDay < new TimeSpan(11, 0, 0) ||
+                    flight.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
+                {
+                    fees -= 110.0;
+                }
+            }
+
+            string[] discountedOrigins = { "DXB", "BKK", "NRT" }; 
+            foreach (var flight in Flights.Values)
+            {
+                if (discountedOrigins.Contains(flight.Origin))
+                {
+                    fees -= 25.0;
+                }
+            }
+
+            int normFlightCount = Flights.Values.OfType<NORMFlight>().Count();
+            fees -= normFlightCount * 50.0;
+
+
+            return Math.Max(fees, 0); // hopefully the fees dont go into negative
         }
 
         public override string ToString()

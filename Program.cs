@@ -4,6 +4,7 @@
 // Partner Name	: Chua Xiang Qi Theresa
 //==========================================================
 
+using System.Text.RegularExpressions;
 
 namespace S10266136_PRG2Assignment
 
@@ -175,19 +176,19 @@ namespace S10266136_PRG2Assignment
                     switch (status.ToUpper())
                     {
                         case "LWTT":
-                            flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "None", 500);
+                            flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500);
                             break;
 
                         case "DDJB":
-                            flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "None", 300);
+                            flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
                             break;
 
                         case "CFFT":
-                            flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "None", 150);
+                            flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
                             break;
 
                         default:
-                            flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "None");
+                            flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
                             break;
                     }
 
@@ -272,19 +273,13 @@ namespace S10266136_PRG2Assignment
              */
             while (true)
             {
-                Console.WriteLine("=============================================");
-                Console.WriteLine("Create a New Flight");
-                Console.WriteLine("=============================================");
-
-
-                Console.WriteLine("Enter Flight Number:");
+                Console.Write("Enter Flight Number: ");
                 string flightNumber = Console.ReadLine()?.Trim();
 
 
-                if (!flightNumber.Contains(" ") || flightNumber.Split(' ')[0].Length != 2)
+                if (!Regex.IsMatch(flightNumber, @"^[A-Z]{2} \d{3,4}$"))
                 {
-                    Console.WriteLine("Error: Flight should be in the format (ID XXXX), where ID is the airlines and XXX is the flight number");
-                    Console.WriteLine("\n\n\n");
+                    Console.WriteLine("Error: Flight should be in the format (ID XXXX), where ID is the airlines and X are numbers");
                     continue;
                 }
 
@@ -307,18 +302,18 @@ namespace S10266136_PRG2Assignment
                 }
 
 
-                Console.WriteLine("Enter Origin:");
+                Console.Write("Enter Origin: ");
                 string origin = Console.ReadLine()?.Trim();
 
-                Console.WriteLine("Enter Destination:");
+                Console.Write("Enter Destination: ");
                 string destination = Console.ReadLine()?.Trim();
 
                 DateTime expectedTime;
                 while (true)
                 {
-                    Console.WriteLine("Enter Expected Departure/Arrival Time (hh:mm tt) (04:00 pm):");
+                    Console.Write("Enter Expected Departure/Arrival Time (dd/MM/yyyy HH:mm): ");
                     string timeInput = Console.ReadLine()?.Trim();
-                    if (DateTime.TryParseExact(timeInput, "hh:mm tt", null, System.Globalization.DateTimeStyles.None, out expectedTime))
+                    if (DateTime.TryParseExact(timeInput, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out expectedTime))
                     {
                         break;
                     }
@@ -331,28 +326,41 @@ namespace S10266136_PRG2Assignment
                 Console.WriteLine("Would you like to enter a Special Request Code? (Y/N):");
                 string addSpecialRequest = Console.ReadLine()?.Trim().ToUpper();
 
-                int specialRequestCode = 0;
-
+                
+                Flight flight = null;
+                string code = null;
                 if (addSpecialRequest == "Y")
                 {
-                    specialRequestCode = GetInputFromConsole(() =>
+                    while (true)
                     {
-                        Console.WriteLine("""
-                            Enter Special Request Code:
-                            1. LWTT
-                            2. DDJB
-                            3. CFFT
-                            """);
-                    }, "Select a code (1-3):", 1, 3);
+                        Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
+                        code = Console.ReadLine();
+                        string[] options = { "CFFT", "DDJB", "LWTT", "None" };
+
+                        if (Array.Exists(options, option => option.Equals(code, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            flight = code.ToUpper() switch
+                            {
+                                "LWTT" => new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500),
+                                "DDJB" => new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300),
+                                "CFFT" => new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150),
+                                "NONE" => new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled"),
+                                _ => throw new InvalidOperationException("Unexpected code") // This should never happen :D
+                            };
+
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid code entered. Please enter one of the following: CFFT, DDJB, LWTT, or None.");
+                        }
+                    }
+                }
+                else
+                {
+                    flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "None");
                 }
 
-                Flight flight = specialRequestCode switch
-                {
-                    1 => new LWTTFlight(flightNumber, origin, destination, expectedTime, "None", 500),
-                    2 => new DDJBFlight(flightNumber, origin, destination, expectedTime, "None", 300),
-                    3 => new CFFTFlight(flightNumber, origin, destination, expectedTime, "None", 150),
-                    _ => new NORMFlight(flightNumber, origin, destination, expectedTime, "None")
-                };
 
                 terminal.Flights.Add(flightNumber, flight);
                 terminal.Airlines[flightNumber.Split(' ')[0]].AddFlight(flight);
@@ -361,8 +369,7 @@ namespace S10266136_PRG2Assignment
                 {
                     using (StreamWriter sw = File.AppendText(flightsFilePath))
                     {
-                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime:hh:mm tt}," +
-                            $"{(specialRequestCode == 0 ? "" : specialRequestCode == 1 ? "LWTT" : specialRequestCode == 2 ? "DDJB" : "CFFT")}";
+                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime}," + $"{(addSpecialRequest == "Y" ? (code != "None" ? code : "") : "" )}"; 
                         sw.WriteLine(newFlightEntry);
                     }
                 }
@@ -424,6 +431,35 @@ namespace S10266136_PRG2Assignment
                 }
                 else
                 {
+                    string code = terminal.Flights[flightNumber].GetType().Name.Substring(0, 4);
+
+                    if (code == "CFFT")
+                    {
+                        if (terminal.BoardingGates[boardingGate].SupportsCFFT != true)
+                        {
+                            Console.WriteLine($"{boardingGate} does not support the requirement of the flight. {code}");
+                            continue;
+                        }
+                    }
+
+                    if (code == "DDJB")
+                    {
+                        if (terminal.BoardingGates[boardingGate].SupportsDDJB != true)
+                        {
+                            Console.WriteLine($"{boardingGate} does not support the requirement of the flight. {code}");
+                            continue;
+                        }
+                    }
+
+                    if (code == "LWTT")
+                    {
+                        if (terminal.BoardingGates[boardingGate].SupportsLWTT != true)
+                        {
+                            Console.WriteLine($"{boardingGate} does not support the requirement of the flight. {code}");
+                            continue;
+                        }
+                    }
+
                     break;
                 }
             }

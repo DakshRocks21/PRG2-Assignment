@@ -15,26 +15,12 @@ namespace S10266136_PRG2Assignment
             RequestFee = requestFee;
         }
 
-        // DDJB Request Fee
         public override double CalculateFees()
         {
-            double baseFees = 300; // Boarding Gate Base Fee
-            double total = baseFees;
-            double requestFee = 300; // Request Fee
-
-            if (Destination == "Singapore")
-            {
-                total += 500;
-            }
-            else
-            {
-                total += 800;
-            }
-
-            total += requestFee; // Add special request fee
-            return total;
-
+            // Base + gate fee + special fee
+            return base.CalculateFees() + 300.0 + 300.0;
         }
+
         public override string ToString()
         {
             return base.ToString() + $"\nRequest Fee: {RequestFee}";
