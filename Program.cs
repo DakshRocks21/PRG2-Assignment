@@ -92,6 +92,8 @@ namespace S10266136_PRG2Assignment
                         ListAllFlights(terminal);
                         break;
                     case 2:
+                        //Task 2 - Theresa
+                        DisplayBoardingGates(terminal);
                         break;
                     case 3:
                         // Task 5 - Daksh (Done)
@@ -177,7 +179,7 @@ namespace S10266136_PRG2Assignment
         static void LoadAirlines(Terminal terminal, string filePath)
         {
             /*
-             * Written by 
+             * Written by theresa
              */
             Console.WriteLine("Loading Airlines...");
             string[] airlineLines = File.ReadAllLines(filePath);
@@ -197,8 +199,9 @@ namespace S10266136_PRG2Assignment
         static void LoadBoardingGates(Terminal terminal, string filePath)
         {
             /*
-             * Written by 
+             * Written by theresa
              */
+
             Console.WriteLine("Loading Boarding Gates...");
             string[] boardingGateLines = File.ReadAllLines(filePath);
             for (int i = 1; i < boardingGateLines.Length; i++)
@@ -206,10 +209,29 @@ namespace S10266136_PRG2Assignment
                 string line = boardingGateLines[i];
                 string[] parts = line.Split(',');
                 BoardingGate boardingGate = new BoardingGate(parts[0], Convert.ToBoolean(parts[1]), Convert.ToBoolean(parts[2]), Convert.ToBoolean(parts[3]));
-                terminal.BoardingGates.Add(parts[0], boardingGate);
+                //terminal.BoardingGates.Add(parts[0], boardingGate);
+                terminal.AddBoardingGate(boardingGate);
             }
             Console.WriteLine($"{boardingGateLines.Length - 1} Boarding Gates Loaded!");
         }
+
+        static void DisplayBoardingGates(Terminal terminal)
+        {
+            /*
+             * Written by Theresa
+             */
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"List of Boarding Gates for {terminal.TerminalName}");
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"{"Gate Name",-8} {"DDJB",-8} {"CFFT",-8} {"LWTT",-8}");
+          
+            foreach (var boardingGate in terminal.BoardingGates.Values)
+            {
+                Console.WriteLine($"{boardingGate.GateName,-8} {boardingGate.SupportsDDJB,-8} {boardingGate.SupportsCFFT,-8} {boardingGate.SupportsLWTT,-8}");
+            }
+        }
+   
+
 
         static void LoadFlights(Terminal terminal, string filePath)
         {
