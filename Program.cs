@@ -22,7 +22,7 @@ namespace S10266136_PRG2Assignment
             while (true)
             {
                 Console.WriteLine("\n\n\n\n");
-                int menuOption = GetInputFromConsole(DisplayMenu, "Please select your option:", 0, 7);
+                int menuOption = GetInputFromConsole(DisplayMenu, "Please select your option:", 0, 8);
 
                 switch (menuOption)
                 {
@@ -50,8 +50,13 @@ namespace S10266136_PRG2Assignment
                         break;
                     case 7:
                         // Task 9 - Daksh (Done)
-                        DisplayFlightsForDay(terminal); 
+                        DisplayFlightsForDay(terminal);
                         break;
+                    case 8:
+                        // Advanced Feature 2 - Daksh (Done)
+                        DisplayBillForEachAirline(terminal);
+                        break;
+
                 }
 
             }
@@ -70,6 +75,7 @@ namespace S10266136_PRG2Assignment
         5. Display Airline Flights
         6. Modify Flight Details
         7. Display Flight Schedule
+        8. Calculate bill for Each Airline
         0. Exit 
 
         """);
@@ -326,7 +332,7 @@ namespace S10266136_PRG2Assignment
                 Console.WriteLine("Would you like to enter a Special Request Code? (Y/N):");
                 string addSpecialRequest = Console.ReadLine()?.Trim().ToUpper();
 
-                
+
                 Flight flight = null;
                 string code = null;
                 if (addSpecialRequest == "Y")
@@ -369,7 +375,7 @@ namespace S10266136_PRG2Assignment
                 {
                     using (StreamWriter sw = File.AppendText(flightsFilePath))
                     {
-                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime}," + $"{(addSpecialRequest == "Y" ? (code != "None" ? code : "") : "" )}"; 
+                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime}," + $"{(addSpecialRequest == "Y" ? (code != "None" ? code : "") : "")}";
                         sw.WriteLine(newFlightEntry);
                     }
                 }
@@ -411,6 +417,29 @@ namespace S10266136_PRG2Assignment
                 }
                 else
                 {
+                    foreach (BoardingGate bg in terminal.BoardingGates.Values)
+                    {
+
+                        if (bg.Flight == null)
+                        {
+                            continue;
+                        }
+                        else if (bg.Flight.FlightNumber == flightNumber)
+                        {
+
+                            Console.Write($"This flight has been assigned to Gate {bg.GateName}, do you to assign it to a new gate? (Y/N): ");
+                            string change = Console.ReadLine();
+                            if (change == "Y")
+                            {
+                                bg.Flight = null;
+                                break;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                    }
                     break;
                 }
             }
@@ -505,6 +534,84 @@ namespace S10266136_PRG2Assignment
             terminal.BoardingGates[boardingGate].Flight = terminal.Flights[flightNumber];
             Console.WriteLine($"Flight {flightNumber} has been successfully assigned to Boarding Gate {boardingGate}!");
         }
+
+        static void DisplayBillForEachAirline(Terminal terminal)
+        {
+            int totalNumberOfFlights = terminal.Flights.Count();
+            int totalNumberOfFlightsWithGates = 0;
+
+            foreach (BoardingGate boardingGate in terminal.BoardingGates.Values)
+            {
+                if (boardingGate.Flight != null)
+                {
+                    totalNumberOfFlightsWithGates += 1;
+                }
+            }
+
+            if (totalNumberOfFlightsWithGates != totalNumberOfFlights)
+            {
+                Console.WriteLine("Ensure that all unassigned Flights have their Boarding Gates assigned before running this again");
+                return;
+            }
+
+            double totalFees = 0;
+            double totalDiscounts = 0;
+
+            Console.WriteLine($"{"Airlines",-25} Sub Total \t Discounts \t Total");
+            foreach (Airline airline in terminal.Airlines.Values)
+            {
+                double fees = 0.0;
+
+                double discount = 0.0;
+
+                foreach (Flight flight in airline.Flights.Values)
+                {
+                    fees += flight.CalculateFees();
+                }
+
+
+                if (airline.Flights.Count >= 5)
+                {
+                    discount += fees * 0.03;
+                }
+
+                // int/int = int :D
+                discount += (airline.Flights.Count / 3) * 350.0;
+
+
+                foreach (var flight in airline.Flights.Values)
+                {
+                    if (flight.ExpectedTime.TimeOfDay < new TimeSpan(11, 0, 0) ||
+                        flight.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
+                    {
+                        discount += 110.0;
+                    }
+                }
+
+                string[] discountedOrigins = { "DXB", "BKK", "NRT" };
+                foreach (var flight in airline.Flights.Values)
+                {
+                    if (discountedOrigins.Contains(flight.Origin))
+                    {
+                        discount += 25.0;
+                    }
+                }
+
+                int normFlightCount = airline.Flights.Values.OfType<NORMFlight>().Count();
+                discount += normFlightCount * 50.0;
+
+                Console.WriteLine($"{airline.Name,-25} \t\t {fees} \t {discount} \t {fees - discount}");
+
+                totalFees += fees;
+                totalDiscounts += discount;
+            }
+
+            for (int i = 0; i < 55; i++)
+            {
+                Console.Write("-");
+            }
+            Console.WriteLine($"\n{"Total",-25}{totalFees} \t {totalDiscounts} \t {totalFees - totalDiscounts}");
+
+        }
     }
 }
-
