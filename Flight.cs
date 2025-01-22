@@ -7,7 +7,7 @@
 
 namespace S10266136_PRG2Assignment
 {
-    abstract class Flight : IComparable<Flight>
+    class Flight : IComparable<Flight>
     {
 
         public string FlightNumber { get; set; }
