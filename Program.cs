@@ -13,12 +13,69 @@ namespace S10266136_PRG2Assignment
     {
         static void Main(string[] args)
         {
-            Terminal terminal = new Terminal();
-            terminal.TerminalName = "Changi Airport Terminal 5";
+            TerminalManager terminalManager = new TerminalManager();
 
-            // Task 1 & 2;
-            InitValues(terminal, "airlines.csv", "boardinggates.csv", "flights.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 5", "airlines.csv", "boardinggates.csv", "flights.csv");
+            //terminalManager.AddTerminal("Terminal 4", "airlines_T4.csv", "boardinggates_T4.csv", "flights_T4.csv");
 
+            while (true)
+            {
+                Console.WriteLine("\n\n");
+                Console.WriteLine("=============================================");
+                Console.WriteLine("Welcome to Changi Airport Terminal Manager");
+                Console.WriteLine("=============================================");
+                Console.WriteLine("1. Select Terminal");
+                Console.WriteLine("2. Add New Terminal");
+                Console.WriteLine("0. Exit");
+                Console.WriteLine("=============================================");
+
+                int choice = GetInputFromConsole(() => { }, "Please select an option:", 0, 2);
+
+                switch (choice)
+                {
+                    case 0:
+                        Console.WriteLine("Goodbye!");
+                        return;
+
+                    case 1:
+                        terminalManager.ListTerminals();
+                        Console.Write("Enter Terminal Name: ");
+                        string terminalName = Console.ReadLine()?.Trim();
+
+                        var selectedTerminal = terminalManager.GetTerminal(terminalName);
+                        if (selectedTerminal != null)
+                        {
+                            ManageTerminal(selectedTerminal);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error: Terminal '{terminalName}' does not exist.");
+                        }
+                        break;
+
+                    case 2:
+                        Console.Write("Enter New Terminal Name: ");
+                        string newTerminalName = Console.ReadLine()?.Trim();
+
+                        Console.Write("Enter Airlines File Path: ");
+                        string airlinesFile = Console.ReadLine()?.Trim();
+
+                        Console.Write("Enter Boarding Gates File Path: ");
+                        string gatesFile = Console.ReadLine()?.Trim();
+
+                        Console.Write("Enter Flights File Path: ");
+                        string flightsFile = Console.ReadLine()?.Trim();
+
+                        terminalManager.AddTerminal(newTerminalName, airlinesFile, gatesFile, flightsFile);
+                        Console.WriteLine($"Terminal '{newTerminalName}' has been added!");
+                        break;
+                }
+            }
+        }
+
+
+        static void ManageTerminal(Terminal terminal)
+        {
             while (true)
             {
                 Console.WriteLine("\n\n\n\n");
@@ -81,7 +138,7 @@ namespace S10266136_PRG2Assignment
         """);
         }
 
-        static void InitValues(Terminal terminal, string airlinesFilePath, string boardingGatesFilePath, string flightsFilePath)
+        public static void InitValues(Terminal terminal, string airlinesFilePath, string boardingGatesFilePath, string flightsFilePath)
         {
             // Task 1 - Theresa (Done)
             LoadAirlines(terminal, airlinesFilePath);
