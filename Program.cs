@@ -15,8 +15,10 @@ namespace S10266136_PRG2Assignment
         {
             TerminalManager terminalManager = new TerminalManager();
 
-            terminalManager.AddTerminal("Changi Airport Terminal 5", "airlines.csv", "boardinggates.csv", "flights.csv");
-            //terminalManager.AddTerminal("Terminal 4", "airlines_T4.csv", "boardinggates_T4.csv", "flights_T4.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 5", "datasets\\airlines.csv", "datasets\\boardinggates.csv", "datasets\\flights.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets\\airlines_T4.csv", "datasets\\boardinggates.csv", "datasets\\flights_T4.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets\\airlines_T3.csv", "datasets\\boardinggates.csv", "datasets\\flights_T3.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets\\airlines_T2.csv", "datasets\\boardinggates.csv", "datasets\\flights_T2.csv");
 
             while (true)
             {
@@ -38,19 +40,7 @@ namespace S10266136_PRG2Assignment
                         return;
 
                     case 1:
-                        terminalManager.ListTerminals();
-                        Console.Write("Enter Terminal Name: ");
-                        string terminalName = Console.ReadLine()?.Trim();
-
-                        var selectedTerminal = terminalManager.GetTerminal(terminalName);
-                        if (selectedTerminal != null)
-                        {
-                            ManageTerminal(selectedTerminal);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error: Terminal '{terminalName}' does not exist.");
-                        }
+                        ListTerminals(terminalManager);
                         break;
 
                     case 2:
@@ -73,13 +63,44 @@ namespace S10266136_PRG2Assignment
             }
         }
 
+        static void ListTerminals(TerminalManager terminalManager)
+        {
+            Console.WriteLine("\nAvailable Terminals:");
+            var terminals = terminalManager.Terminals.Keys.ToList();
+
+            for (int i = 0; i < terminals.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {terminals[i]}");
+            }
+            Console.WriteLine("0. Return to Main Menu");
+
+            int terminalChoice = GetInputFromConsole(() => { }, "Select a terminal by entering its number:", 0, terminals.Count);
+
+            if (terminalChoice == 0)
+            {
+                return;
+            }
+
+            string selectedTerminalName = terminals[terminalChoice - 1];
+            var selectedTerminal = terminalManager.GetTerminal(selectedTerminalName);
+
+            if (selectedTerminal != null)
+            {
+                ManageTerminal(selectedTerminal);
+            }
+            else
+            {
+                Console.WriteLine($"Error: Terminal '{selectedTerminalName}' does not exist.");
+            }
+        }
+
 
         static void ManageTerminal(Terminal terminal)
         {
             while (true)
             {
                 Console.WriteLine("\n\n\n\n");
-                int menuOption = GetInputFromConsole(DisplayMenu, "Please select your option:", 0, 8);
+                int menuOption = GetInputFromConsole(() => DisplayMenu(terminal), "Please select your option:", 0, 8);
 
                 switch (menuOption)
                 {
@@ -121,11 +142,11 @@ namespace S10266136_PRG2Assignment
             }
         }
 
-        static void DisplayMenu()
+        static void DisplayMenu(Terminal terminal)
         {
-            Console.WriteLine("""
+            Console.WriteLine($"""
         =============================================
-        Welcome to Changi Airport Terminal 5
+        Welcome to {terminal.TerminalName}
         =============================================
         1. List All Flights
         2. List Boarding Gates
