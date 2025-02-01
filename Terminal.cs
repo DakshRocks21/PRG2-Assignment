@@ -4,6 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//==========================================================
+// Student Number	: S10266136
+// Student Name	: Daksh Thapar
+// Partner Name	: Chua Xiang Qi Theresa
+//==========================================================
+
 namespace S10266136_PRG2Assignment
 {
     class Terminal
@@ -53,7 +59,7 @@ namespace S10266136_PRG2Assignment
                 return null; // Flight not found
             }
             foreach (var airline in Airlines.Values)
-            {   
+            {
                 if (airline.Flights.ContainsKey(flight.FlightNumber))
                 {
                     return airline;

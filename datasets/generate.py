@@ -1,3 +1,14 @@
+"""	
+//==========================================================
+// Student Number : S10266136
+// Student Name	: Daksh Thapar
+// Partner Name	: Chua Xiang Qi Theresa
+//==========================================================
+"""
+
+
+# Written by Daksh, to generate random data for the terminal csv files
+
 import random
 
 with open("datasets\\country.csv", "r") as f:
