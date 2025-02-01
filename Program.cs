@@ -515,7 +515,7 @@ namespace S10266136_PRG2Assignment
                 {
                     using (StreamWriter sw = File.AppendText(flightsFilePath))
                     {
-                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime}," + $"{(addSpecialRequest == "Y" ? (code != "None" ? code : "") : "")}";
+                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime}," + code != "None" ? code.ToUpper() : "";
                         sw.WriteLine(newFlightEntry);
                     }
                 }
