@@ -26,7 +26,6 @@ namespace S10266136_PRG2Assignment
         }
         public virtual double CalculateFees()
         {
-            // I did this because a flight cannot take off and land in singapore!
             if (Destination.ToLower().StartsWith("singapore"))
             {
                 return 500.0;

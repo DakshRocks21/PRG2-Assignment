@@ -370,8 +370,7 @@ namespace S10266136_PRG2Assignment
             Console.WriteLine("=============================================");
             Console.WriteLine("Flight Number \t Airline Name \t\t Origin \t\t Destination \t\t Expected Departure/Arrival Time \t Status \t Boarding Gate");
 
-
-            foreach (var flight in terminal.Flights.Values)
+            foreach (var flight in flightList)
             {
                 Airline airline = terminal.GetAirlineFromFlight(flight);
                 string boardingGateForFlight = null;
@@ -403,7 +402,7 @@ namespace S10266136_PRG2Assignment
                 string flightNumber = Console.ReadLine()?.Trim();
 
 
-                if (!Regex.IsMatch(flightNumber, @"^[A-Z]{3} \d{3,4}$"))
+                if (Regex.IsMatch(flightNumber, @"^[A-Z]{3} \d{3,4}$"))
                 {
                     Console.WriteLine("Error: Flight should be in the format (ID XXXX), where ID is the airlines and X are numbers");
                     continue;
@@ -453,7 +452,7 @@ namespace S10266136_PRG2Assignment
                     {
                         Console.WriteLine("Error: Both the origin and destination cannot be the same!. Try again!");
                     }
-                    else if ((origin.ToLower().StartsWith("singapore "))|| (destination.ToLower().StartsWith("singapore ")))
+                    else if (!(origin.ToLower().Contains("singapore") || destination.ToLower().Contains("singapore")))
                     {
                         Console.WriteLine("Error: Either origin or destination must be singapore!. Try again!");
                     }
