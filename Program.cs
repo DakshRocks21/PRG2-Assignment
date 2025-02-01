@@ -17,11 +17,11 @@ namespace S10266136_PRG2Assignment
 
             TerminalManager terminalManager = new TerminalManager();
 
-            terminalManager.AddTerminal("Changi Airport Terminal 5", "datasets/airlines.csv", "datasets/boardinggates.csv", "datasets/flights.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets/airlines_T4.csv", "datasets/boardinggates.csv", "datasets/flights_T4.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets/airlines_T3.csv", "datasets/boardinggates.csv", "datasets/flights_T3.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets/airlines_T2.csv", "datasets/boardinggates.csv", "datasets/flights_T2.csv");
             terminalManager.AddTerminal("Changi Airport Terminal 1", "datasets/airlines_T1.csv", "datasets//boardinggates.csv", "datasets/flights_T1.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets/airlines_T2.csv", "datasets/boardinggates.csv", "datasets/flights_T2.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets/airlines_T3.csv", "datasets/boardinggates.csv", "datasets/flights_T3.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets/airlines_T4.csv", "datasets/boardinggates.csv", "datasets/flights_T4.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 5", "datasets/airlines.csv", "datasets/boardinggates.csv", "datasets/flights.csv");
 
             while (true)
             {
