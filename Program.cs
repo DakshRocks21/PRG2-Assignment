@@ -745,7 +745,7 @@ namespace S10266136_PRG2Assignment
                                 Console.Write("Enter New Expected Departure/Arrival Time (dd/MM/yyyy HH:mm): ");
                                 string newTime = Console.ReadLine()?.Trim();
 
-                                if (DateTime.TryParseExact(newTime, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime newExpectedTime))
+                                if (DateTime.TryParseExact(newTime, "d/M/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime newExpectedTime))
                                 {
                                     // convert to format: "dd/M/yyyy hh:mm:ss tt"
                                     string formattedTime = newExpectedTime.ToString("d/M/yyyy hh:mm:ss tt");
@@ -759,7 +759,7 @@ namespace S10266136_PRG2Assignment
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid date format. Please use dd/MM/yyyy HH:mm such as 13/1/2025 16:30.");
+                                    Console.WriteLine("Invalid date format. Please use d/M/yyyy HH:mm such as 13/1/2025 16:30.");
                                 }
                             }
                             break;
