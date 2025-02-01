@@ -17,11 +17,11 @@ namespace S10266136_PRG2Assignment
 
             TerminalManager terminalManager = new TerminalManager();
 
-            terminalManager.AddTerminal("Changi Airport Terminal 5", "datasets\\airlines.csv", "datasets\\boardinggates.csv", "datasets\\flights.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets\\airlines_T4.csv", "datasets\\boardinggates.csv", "datasets\\flights_T4.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets\\airlines_T3.csv", "datasets\\boardinggates.csv", "datasets\\flights_T3.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets\\airlines_T2.csv", "datasets\\boardinggates.csv", "datasets\\flights_T2.csv");
-            terminalManager.AddTerminal("Changi Airport Terminal 1", "datasets\\airlines_T1.csv", "datasets\\boardinggates.csv", "datasets\\flights_T1.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 5", "datasets/airlines.csv", "datasets/boardinggates.csv", "datasets/flights.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets/airlines_T4.csv", "datasets/boardinggates.csv", "datasets/flights_T4.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets/airlines_T3.csv", "datasets/boardinggates.csv", "datasets/flights_T3.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets/airlines_T2.csv", "datasets/boardinggates.csv", "datasets/flights_T2.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 1", "datasets/airlines_T1.csv", "datasets//boardinggates.csv", "datasets/flights_T1.csv");
 
             while (true)
             {
@@ -93,7 +93,17 @@ namespace S10266136_PRG2Assignment
 
             if (selectedTerminal != null)
             {
-                ManageTerminal(selectedTerminal);
+                string flights_file = "";
+                if (selectedTerminal.TerminalName.EndsWith("5"))
+                {
+                    // Default normal usecase
+                    flights_file = "datasets/flights.csv";
+                }
+                else
+                {
+                    flights_file = $"datasets/flights_T{selectedTerminal.TerminalName.Substring(-1)}.csv";
+                }
+                ManageTerminal(selectedTerminal, flights_file);
             }
             else
             {
@@ -102,7 +112,7 @@ namespace S10266136_PRG2Assignment
         }
 
 
-        static void ManageTerminal(Terminal terminal)
+        static void ManageTerminal(Terminal terminal, string flights_file)
         {
             while (true)
             {
@@ -129,7 +139,7 @@ namespace S10266136_PRG2Assignment
                         break;
                     case 4:
                         // Task 6 - Daksh (Done)
-                        CreateNewFlight(terminal, "flights.csv");
+                        CreateNewFlight(terminal, flights_file);
                         break;
                     case 5:
                         //Task 7 - Theresa (Done)
@@ -483,13 +493,14 @@ namespace S10266136_PRG2Assignment
                             case "LWTT":
                                 flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500);
                                 break;
-                            case "DDJB": new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
-                                 break;
+                            case "DDJB":
+                                flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
+                                break;
                             case "CFFT":
-                                new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
+                                flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
                                 break;
                             case "NONE":
-                                new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
+                                flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
                                 break;
 
                             default:
@@ -505,8 +516,6 @@ namespace S10266136_PRG2Assignment
                         Console.WriteLine("Invalid code entered. Please enter one of the following: CFFT, DDJB, LWTT, or None.");
                     }
                 }
-        
-
 
                 terminal.Flights.Add(flightNumber, flight);
                 terminal.Airlines[flightNumber.Split(' ')[0]].AddFlight(flight);
@@ -515,7 +524,7 @@ namespace S10266136_PRG2Assignment
                 {
                     using (StreamWriter sw = File.AppendText(flightsFilePath))
                     {
-                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime}," + code != "None" ? code.ToUpper() : "";
+                        string newFlightEntry = $"{flightNumber},{origin},{destination},{expectedTime.ToString("h:mm tt")}," + (code.ToUpper() != "NONE" ? code.ToUpper() : "");
                         sw.WriteLine(newFlightEntry);
                     }
                 }
