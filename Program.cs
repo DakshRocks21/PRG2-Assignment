@@ -15,6 +15,7 @@ namespace S10266136_PRG2Assignment
 
         static void Main(string[] args)
         {
+
             TerminalManager terminalManager = new TerminalManager();
 
             terminalManager.AddTerminal("Changi Airport Terminal 5", "datasets\\airlines.csv", "datasets\\boardinggates.csv", "datasets\\flights.csv");
@@ -69,6 +70,10 @@ namespace S10266136_PRG2Assignment
 
         static void ListTerminals(TerminalManager terminalManager)
         {
+            /*
+             * Written by Daksh
+             * Bonus Task
+             */
             Console.WriteLine("\nAvailable Terminals:");
             var terminals = terminalManager.Terminals.Keys.ToList();
 
@@ -569,17 +574,13 @@ namespace S10266136_PRG2Assignment
             Console.WriteLine($"""
             =============================================
             List of Airlines for {terminal.TerminalName}
-            =============================================
+            =============================================            
             Airline Code    Airline Name
-            SQ              Singapore Airlines
-            MH              Malaysia Airlines
-            JL              Japan Airlines
-            CX              Cathay Pacific
-            QF              Qantas Airways
-            TR              AirAsia
-            EK              Emirates
-            BA              British Airways
             """);
+            foreach (Airline air in terminal.Airlines.Values)
+            {
+                Console.WriteLine($"{air.Code,-16}{air.Name}");
+            }
 
             string airlineCode;
 
@@ -660,17 +661,14 @@ namespace S10266136_PRG2Assignment
             Console.WriteLine($"""
             =============================================
             List of Airlines for {terminal.TerminalName}
-            =============================================
+            =============================================            
             Airline Code    Airline Name
-            SQ              Singapore Airlines
-            MH              Malaysia Airlines
-            JL              Japan Airlines
-            CX              Cathay Pacific
-            QF              Qantas Airways
-            TR              AirAsia
-            EK              Emirates
-            BA              British Airways
             """);
+            foreach (Airline air in terminal.Airlines.Values)
+            {
+                Console.WriteLine($"{air.Code,-16}{air.Name}");
+            }
+
 
             string airlineCode;
 
@@ -858,7 +856,7 @@ namespace S10266136_PRG2Assignment
 
                         case 4:
                             // Modify Boarding Gate
-                            
+
                             string newBoardingGate;
 
                             while (true)
@@ -1297,7 +1295,7 @@ namespace S10266136_PRG2Assignment
                 string airlineName = terminal.Airlines.Values.FirstOrDefault(a => a.Flights.ContainsKey(flight.FlightNumber))?.Name ?? "N/A";
                 string specialRequestCode = specialRequestCodes.ContainsKey(flight.FlightNumber) ? specialRequestCodes[flight.FlightNumber] : "N/A";
                 string boardingGate = terminal.BoardingGates.Values.FirstOrDefault(g => g.Flight == flight)?.GateName ?? "Unassigned";
-                Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCode,-25} {boardingGate,-15}");   
+                Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCode,-25} {boardingGate,-15}");
             }
 
             // Step 6: Display statistics

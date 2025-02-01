@@ -27,11 +27,11 @@ namespace S10266136_PRG2Assignment
         public virtual double CalculateFees()
         {
             // I did this because a flight cannot take off and land in singapore!
-            if (Destination == "Singapore (SIN)")
+            if (Destination.StartsWith("Singapore"))
             {
                 return 500.0;
             }
-            if (Origin == "Singapore (SIN)")
+            if (Origin.StartsWith("Singapore"))
             {
                 return 800.0;
             }
