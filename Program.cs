@@ -1201,18 +1201,24 @@ namespace S10266136_PRG2Assignment
                 }
 
                 string[] discountedOrigins = { "DXB", "BKK", "NRT" };
+
                 foreach (var flight in airline.Flights.Values)
-                {
-                    if (discountedOrigins.Contains(flight.Origin))
+                {                    
+                    Match match = Regex.Match(flight.Origin, @"\(([^)]+)\)");
+                    if (match.Success)
                     {
-                        discount += 25.0;
+                        string iataCode = match.Groups[1].Value;
+                        if (discountedOrigins.Contains(iataCode))
+                        {
+                            discount += 25.0;
+                        }
                     }
                 }
 
                 int normFlightCount = airline.Flights.Values.OfType<NORMFlight>().Count();
                 discount += normFlightCount * 50.0;
 
-                Console.WriteLine($"{airline.Name,-25} {fees,-16} {discount,-16} {fees - discount,-16}");
+                Console.WriteLine($"{airline.Name,-25} {"$" + fees,-16} {"$" + discount,-16} {"$" + (fees - discount),-16}");
 
                 totalFees += fees;
                 totalDiscounts += discount;
@@ -1220,7 +1226,9 @@ namespace S10266136_PRG2Assignment
 
             Console.WriteLine(new string('-', 70));
 
-            Console.WriteLine($"{"Total",-25} {totalFees,-16} {totalDiscounts,-16} {totalFees - totalDiscounts,-16}");
+            Console.WriteLine($"{"Total",-25} {"$" + totalFees,-16} {"$" + totalDiscounts,-16} {"$" + (totalFees - totalDiscounts),-16}");
+
+            Console.WriteLine("Discount Percentage : " + Math.Round((totalDiscounts / totalFees) * 100, 2)+ "%");
 
         }
 
