@@ -22,6 +22,7 @@ namespace S10266136_PRG2Assignment
             terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets\\airlines_T4.csv", "datasets\\boardinggates.csv", "datasets\\flights_T4.csv");
             terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets\\airlines_T3.csv", "datasets\\boardinggates.csv", "datasets\\flights_T3.csv");
             terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets\\airlines_T2.csv", "datasets\\boardinggates.csv", "datasets\\flights_T2.csv");
+            terminalManager.AddTerminal("Changi Airport Terminal 1", "datasets\\airlines_T1.csv", "datasets\\boardinggates.csv", "datasets\\flights_T1.csv");
 
             LoadFlightSpecialRequestCodes("datasets/flights.csv");
 
@@ -146,14 +147,13 @@ namespace S10266136_PRG2Assignment
                         DisplayFlightsForDay(terminal);
                         break;
                     case 8:
+                        // Advanced Feature 1 - Theresa (Done)
+                        ProcessBoardingAssignments(terminal);
+                        break;                        
+                    case 9:
                         // Advanced Feature 2 - Daksh (Done)
                         DisplayBillForEachAirline(terminal);
                         break;
-                    case 9:
-                        // Advanced Feature 1 - Theresa (Done)
-                        ProcessBoardingAssignments(terminal);
-                        break;
-
                 }
 
             }
@@ -172,8 +172,8 @@ namespace S10266136_PRG2Assignment
         5. Display Airline Flights
         6. Modify Flight Details
         7. Display Flight Schedule
-        8. Calculate bill for Each Airline
-        9. Process Boarding Assignments
+        8. Process Boarding Assignments
+        9. Calculate bill for Each Airline
         0. Exit 
 
         """);
@@ -476,17 +476,43 @@ namespace S10266136_PRG2Assignment
                     continue;
                 }
 
+                string origin;
+                string destination;
+                while (true)
+                {
+                    Console.Write("Enter Origin: ");
+                    origin = Console.ReadLine()?.Trim();
 
-                Console.Write("Enter Origin: ");
-                string origin = Console.ReadLine()?.Trim();
+                    if (!Regex.IsMatch(origin, @"^[A-Za-z\s]+ \([A-Z]{3}\)$"))
+                    {
+                        Console.WriteLine("Error: Origin should be in the format 'City (IATA)', e.g., 'Singapore (SIN)'.");
+                        continue;
+                    }
 
-                Console.Write("Enter Destination: ");
-                string destination = Console.ReadLine()?.Trim();
+                    Console.Write("Enter Destination: ");
+                    destination = Console.ReadLine()?.Trim();
+
+                    if (!Regex.IsMatch(destination, @"^[A-Za-z\s]+ \([A-Z]{3}\)$"))
+                    {
+                        Console.WriteLine("Error: Destination should be in the format 'City (IATA)', e.g., 'Sydney (SYD)'.");
+                        continue;
+                    }
+
+                    if (origin.ToLower() == destination.ToLower())
+                    {
+                        Console.WriteLine("Error: Both the origin and destination cannot be the same!. Try again!");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
 
                 DateTime expectedTime;
                 while (true)
                 {
-                    Console.Write("Enter Expected Departure/Arrival Time (dd/MM/yyyy HH:mm): ");
+                    Console.Write("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
                     string timeInput = Console.ReadLine()?.Trim();
                     if (DateTime.TryParseExact(timeInput, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out expectedTime))
                     {
@@ -498,43 +524,47 @@ namespace S10266136_PRG2Assignment
                     }
                 }
 
-                Console.WriteLine("Would you like to enter a Special Request Code? (Y/N):");
-                string addSpecialRequest = Console.ReadLine()?.Trim().ToUpper();
-
 
                 Flight flight = null;
                 string code = null;
-                if (addSpecialRequest == "Y")
+
+                while (true)
                 {
-                    while (true)
+                    Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
+                    code = Console.ReadLine();
+                    string[] options = { "CFFT", "DDJB", "LWTT", "None" };
+
+                    if (Array.Exists(options, option => option.Equals(code, StringComparison.OrdinalIgnoreCase)))
                     {
-                        Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
-                        code = Console.ReadLine();
-                        string[] options = { "CFFT", "DDJB", "LWTT", "None" };
-
-                        if (Array.Exists(options, option => option.Equals(code, StringComparison.OrdinalIgnoreCase)))
+                        code = code.ToUpper();
+                        switch (code)
                         {
-                            flight = code.ToUpper() switch
-                            {
-                                "LWTT" => new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500),
-                                "DDJB" => new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300),
-                                "CFFT" => new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150),
-                                "NONE" => new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled"),
-                                _ => throw new InvalidOperationException("Unexpected code") // This should never happen :D
-                            };
+                            case "LWTT":
+                                flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500);
+                                break;
+                            case "DDJB": new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
+                                 break;
+                            case "CFFT":
+                                new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
+                                break;
+                            case "NONE":
+                                new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
+                                break;
 
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid code entered. Please enter one of the following: CFFT, DDJB, LWTT, or None.");
-                        }
+                            default:
+                                Console.WriteLine("Error: Code doesnt exist. Try again!");
+                                break;
+                            
+                        };
+
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid code entered. Please enter one of the following: CFFT, DDJB, LWTT, or None.");
                     }
                 }
-                else
-                {
-                    flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "None");
-                }
+        
 
 
                 terminal.Flights.Add(flightNumber, flight);
@@ -1160,7 +1190,7 @@ namespace S10266136_PRG2Assignment
             double totalFees = 0;
             double totalDiscounts = 0;
 
-            Console.WriteLine($"{"Airlines",-25} Sub Total \t Discounts \t Total");
+            Console.WriteLine($"{"Airlines",-25} {"Sub Total", -16} {"Discounts", -16} {"Total", -16}");
             foreach (Airline airline in terminal.Airlines.Values)
             {
                 double fees = 0.0;
@@ -1203,17 +1233,15 @@ namespace S10266136_PRG2Assignment
                 int normFlightCount = airline.Flights.Values.OfType<NORMFlight>().Count();
                 discount += normFlightCount * 50.0;
 
-                Console.WriteLine($"{airline.Name,-25} \t\t {fees} \t {discount} \t {fees - discount}");
+                Console.WriteLine($"{airline.Name,-25} {fees,-16} {discount,-16} {fees - discount,-16}");
 
                 totalFees += fees;
                 totalDiscounts += discount;
             }
 
-            for (int i = 0; i < 55; i++)
-            {
-                Console.Write("-");
-            }
-            Console.WriteLine($"\n{"Total",-25}{totalFees} \t {totalDiscounts} \t {totalFees - totalDiscounts}");
+            Console.WriteLine(new string('-', 70));
+
+            Console.WriteLine($"{"Total",-25} {totalFees,-16} {totalDiscounts,-16} {totalFees - totalDiscounts,-16}");
 
         }
 
