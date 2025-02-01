@@ -1162,7 +1162,10 @@ namespace S10266136_PRG2Assignment
             double totalFees = 0;
             double totalDiscounts = 0;
 
+            Console.WriteLine("\n\n");
             Console.WriteLine($"{"Airlines",-25} {"Sub Total", -16} {"Discounts", -16} {"Total", -16}");
+            Console.WriteLine(new string('-', 70));
+
             foreach (Airline airline in terminal.Airlines.Values)
             {
                 double fees = 0.0;
