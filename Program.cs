@@ -11,7 +11,7 @@ namespace S10266136_PRG2Assignment
 {
     class Program
     {
-        static Dictionary<string, string> specialRequestCodes = new Dictionary<string, string>();
+        //static Dictionary<string, string> specialRequestCodes = new Dictionary<string, string>();
 
         static void Main(string[] args)
         {
@@ -23,7 +23,7 @@ namespace S10266136_PRG2Assignment
             terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets\\airlines_T3.csv", "datasets\\boardinggates.csv", "datasets\\flights_T3.csv");
             terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets\\airlines_T2.csv", "datasets\\boardinggates.csv", "datasets\\flights_T2.csv");
 
-            LoadFlightSpecialRequestCodes("datasets/flights.csv");
+            //LoadFlightSpecialRequestCodes("datasets/flights.csv");
 
             while (true)
             {
@@ -270,58 +270,59 @@ namespace S10266136_PRG2Assignment
             }
         }
 
-        static void LoadFlightSpecialRequestCodes(string filePath)
-        {
-            /*
-             * Written by Theresa
-             */
-            try
-            {
-                // Open the file and read each line
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    string line;
-                    bool isFirstLine = true; // Skip header line
+        //static void LoadFlightSpecialRequestCodes(string filePath)
+        //{
+        //    /*
+        //     * Written by Theresa
+        //     */
+        //    try
+        //    {
+        //        // Open the file and read each line
+        //        using (StreamReader reader = new StreamReader(filePath))
+        //        {
+        //            string line;
+        //            bool isFirstLine = true; // Skip header line
 
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        // Skip the header line
-                        if (isFirstLine)
-                        {
-                            isFirstLine = false;
-                            continue;
-                        }
+        //            while ((line = reader.ReadLine()) != null)
+        //            {
+        //                // Skip the header line
+        //                if (isFirstLine)
+        //                {
+        //                    isFirstLine = false;
+        //                    continue;
+        //                }
 
-                        // Split the line by commas
-                        string[] columns = line.Split(',');
+        //                // Split the line by commas
+        //                string[] columns = line.Split(',');
 
-                        if (columns.Length >= 5) // Ensure there are at least 5 columns
-                        {
-                            string flightNumber = columns[0].Trim();
-                            string specialRequestCode = columns[4].Trim();
+        //                if (columns.Length >= 5) // Ensure there are at least 5 columns
+        //                {
+        //                    string flightNumber = columns[0].Trim();
+        //                    string specialRequestCode = columns[4].Trim();
 
-                            // Check if the special request code is empty or null, and if so, set it to "N/A"
-                            if (string.IsNullOrEmpty(specialRequestCode))
-                            {
-                                specialRequestCode = "N/A";
-                            }
+        //                    // Check if the special request code is empty or null, and if so, set it to "N/A"
+        //                    if (string.IsNullOrEmpty(specialRequestCode))
+        //                    {
+        //                        specialRequestCode = "N/A";
+        //                    }
 
-                            // Add to the dictionary (check if value exists before adding)
-                            if (!string.IsNullOrEmpty(flightNumber))
-                            {
-                                specialRequestCodes[flightNumber] = specialRequestCode;
-                            }
-                        }
-                    }
-                }
+        //                    // Add to the dictionary (check if value exists before adding)
+        //                    if (!string.IsNullOrEmpty(flightNumber))
+        //                    {
+        //                        specialRequestCodes[flightNumber] = specialRequestCode;
 
-                Console.WriteLine("Data successfully loaded into dictionary.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while reading the file: {ex.Message}");
-            }
-        }
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        Console.WriteLine("Data successfully loaded into dictionary.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"An error occurred while reading the file: {ex.Message}");
+        //    }
+        //}
 
 
         static void LoadFlights(Terminal terminal, string filePath)
@@ -645,7 +646,16 @@ namespace S10266136_PRG2Assignment
                         }
                     }
 
-                    Console.WriteLine($"{flight.FlightNumber,-15} {airline.Name,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCodes[flightNumber],-25} {boardingGateName,-20}");
+                    //Console.WriteLine($"{flight.FlightNumber,-15} {airline.Name,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCodes[flightNumber],-25} {boardingGateName,-20}");
+                    string specialRequestCode = terminal.Flights[flight.FlightNumber].GetType().Name.Substring(0, 4);
+
+                    // If there's no special request in the CSV (empty field), set it to "N/A"
+                    if (string.IsNullOrEmpty(specialRequestCode) || specialRequestCode == "NORM")
+                    {
+                        specialRequestCode = "N/A";
+                    }
+
+                    Console.WriteLine($"{flight.FlightNumber,-15} {airline.Name,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCode,-25} {boardingGateName,-20}");
                     break;
                 }
             }
@@ -656,7 +666,7 @@ namespace S10266136_PRG2Assignment
         static void ModifyFlightDetails(Terminal terminal)
         {
             /*
-             * Written by Theresa
+             * Written by Theresa 
              */
             Console.WriteLine($"""
             =============================================
@@ -840,7 +850,22 @@ namespace S10266136_PRG2Assignment
                             {
                                 Console.Write("Enter New Special Request Code: ");
                                 string newSpecialRequest = Console.ReadLine()?.Trim();
-                                specialRequestCodes[flightNumber] = newSpecialRequest;
+                                //specialRequestCodes[flightNumber] = newSpecialRequest;
+
+                                // Update the special request code by creating a new flight object with the updated code
+                                Flight oldFlight = terminal.Flights[flightNumber];
+                                Flight newFlight = newSpecialRequest switch
+                                {
+                                    "CFFT" => new CFFTFlight(oldFlight.FlightNumber, oldFlight.Origin, oldFlight.Destination, oldFlight.ExpectedTime, oldFlight.Status, 150),
+                                    "DDJB" => new DDJBFlight(oldFlight.FlightNumber, oldFlight.Origin, oldFlight.Destination, oldFlight.ExpectedTime, oldFlight.Status, 300),
+                                    "LWTT" => new LWTTFlight(oldFlight.FlightNumber, oldFlight.Origin, oldFlight.Destination, oldFlight.ExpectedTime, oldFlight.Status, 500),
+                                    _ => new NORMFlight(oldFlight.FlightNumber, oldFlight.Origin, oldFlight.Destination, oldFlight.ExpectedTime, oldFlight.Status)
+                                };
+
+                                terminal.Flights[flightNumber] = newFlight;
+
+
+
 
                                 if (newSpecialRequest == "DDJB" || newSpecialRequest == "CFFT" || newSpecialRequest == "LWTT")
                                 {
@@ -905,7 +930,7 @@ namespace S10266136_PRG2Assignment
                     break;
             }
 
-            // Display updated flight details
+            // Display updated flight details      // Special Request Code: {specialRequestCodes[flight.FlightNumber]}
             foreach (var flight in airline.Flights.Values)
             {
                 if (flight.FlightNumber == flightNumber)
@@ -917,7 +942,7 @@ namespace S10266136_PRG2Assignment
                     Destination: {flight.Destination}
                     Expected Departure/Arrival Time: {flight.ExpectedTime}
                     Status: {flight.Status}
-                    Special Request Code: {specialRequestCodes[flight.FlightNumber]}
+                    Special Request Code: {terminal.Flights[flight.FlightNumber].GetType().Name.Substring(0, 4)}
                     Boarding Gate: {GetBoardingGate(terminal, airline, flight.FlightNumber)}
                     """);
                 }
@@ -1261,10 +1286,13 @@ namespace S10266136_PRG2Assignment
                 BoardingGate assignedGate = null;
 
                 // Step 3: Assign based on special request code
-                if (specialRequestCodes.TryGetValue(currentFlight.FlightNumber, out string specialRequestCode))
-                {
-                    assignedGate = availableGates.FirstOrDefault(g => SupportsSpecialRequest(g, specialRequestCode));
-                }
+                string specialRequestCode = terminal.Flights[currentFlight.FlightNumber].GetType().Name.Substring(0, 4);
+                assignedGate = availableGates.FirstOrDefault(g => SupportsSpecialRequest(g, specialRequestCode));
+
+                //if (specialRequestCodes.TryGetValue(currentFlight.FlightNumber, out string specialRequestCode))
+                //{
+                //    assignedGate = availableGates.FirstOrDefault(g => SupportsSpecialRequest(g, specialRequestCode));
+                //}
 
                 // If no special request match, assign any available gate
                 if (assignedGate == null)
@@ -1293,7 +1321,12 @@ namespace S10266136_PRG2Assignment
             foreach (var flight in newlyAssignedFlights)
             {
                 string airlineName = terminal.Airlines.Values.FirstOrDefault(a => a.Flights.ContainsKey(flight.FlightNumber))?.Name ?? "N/A";
-                string specialRequestCode = specialRequestCodes.ContainsKey(flight.FlightNumber) ? specialRequestCodes[flight.FlightNumber] : "N/A";
+                string specialRequestCode = terminal.Flights[flight.FlightNumber].GetType().Name.Substring(0, 4);
+                if (string.IsNullOrEmpty(specialRequestCode) || specialRequestCode == "NORM")
+                {
+                    specialRequestCode = "N/A";
+                }
+                //string specialRequestCode = specialRequestCodes.ContainsKey(flight.FlightNumber) ? specialRequestCodes[flight.FlightNumber] : "N/A";
                 string boardingGate = terminal.BoardingGates.Values.FirstOrDefault(g => g.Flight == flight)?.GateName ?? "Unassigned";
                 Console.WriteLine($"{flight.FlightNumber,-15} {airlineName,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCode,-25} {boardingGate,-15}");
             }
