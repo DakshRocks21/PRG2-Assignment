@@ -4,6 +4,7 @@
 // Partner Name	: Chua Xiang Qi Theresa
 //==========================================================
 
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace S10266136_PRG2Assignment
@@ -11,8 +12,6 @@ namespace S10266136_PRG2Assignment
 {
     class Program
     {
-        //static Dictionary<string, string> specialRequestCodes = new Dictionary<string, string>();
-
         static void Main(string[] args)
         {
 
@@ -22,8 +21,6 @@ namespace S10266136_PRG2Assignment
             terminalManager.AddTerminal("Changi Airport Terminal 4", "datasets\\airlines_T4.csv", "datasets\\boardinggates.csv", "datasets\\flights_T4.csv");
             terminalManager.AddTerminal("Changi Airport Terminal 3", "datasets\\airlines_T3.csv", "datasets\\boardinggates.csv", "datasets\\flights_T3.csv");
             terminalManager.AddTerminal("Changi Airport Terminal 2", "datasets\\airlines_T2.csv", "datasets\\boardinggates.csv", "datasets\\flights_T2.csv");
-
-            //LoadFlightSpecialRequestCodes("datasets/flights.csv");
 
             while (true)
             {
@@ -240,7 +237,6 @@ namespace S10266136_PRG2Assignment
             /*
              * Written by theresa
              */
-
             Console.WriteLine("Loading Boarding Gates...");
             string[] boardingGateLines = File.ReadAllLines(filePath);
             for (int i = 1; i < boardingGateLines.Length; i++)
@@ -269,61 +265,6 @@ namespace S10266136_PRG2Assignment
                 Console.WriteLine($"{boardingGate.GateName,-15} {boardingGate.SupportsDDJB,-22} {boardingGate.SupportsCFFT,-22} {boardingGate.SupportsLWTT}");
             }
         }
-
-        //static void LoadFlightSpecialRequestCodes(string filePath)
-        //{
-        //    /*
-        //     * Written by Theresa
-        //     */
-        //    try
-        //    {
-        //        // Open the file and read each line
-        //        using (StreamReader reader = new StreamReader(filePath))
-        //        {
-        //            string line;
-        //            bool isFirstLine = true; // Skip header line
-
-        //            while ((line = reader.ReadLine()) != null)
-        //            {
-        //                // Skip the header line
-        //                if (isFirstLine)
-        //                {
-        //                    isFirstLine = false;
-        //                    continue;
-        //                }
-
-        //                // Split the line by commas
-        //                string[] columns = line.Split(',');
-
-        //                if (columns.Length >= 5) // Ensure there are at least 5 columns
-        //                {
-        //                    string flightNumber = columns[0].Trim();
-        //                    string specialRequestCode = columns[4].Trim();
-
-        //                    // Check if the special request code is empty or null, and if so, set it to "N/A"
-        //                    if (string.IsNullOrEmpty(specialRequestCode))
-        //                    {
-        //                        specialRequestCode = "N/A";
-        //                    }
-
-        //                    // Add to the dictionary (check if value exists before adding)
-        //                    if (!string.IsNullOrEmpty(flightNumber))
-        //                    {
-        //                        specialRequestCodes[flightNumber] = specialRequestCode;
-
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        Console.WriteLine("Data successfully loaded into dictionary.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"An error occurred while reading the file: {ex.Message}");
-        //    }
-        //}
-
 
         static void LoadFlights(Terminal terminal, string filePath)
         {
@@ -386,7 +327,6 @@ namespace S10266136_PRG2Assignment
                 Console.WriteLine($"Error loading flights: {ex.Message}");
             }
         }
-
 
         static void ListAllFlights(Terminal terminal)
         {
@@ -566,7 +506,6 @@ namespace S10266136_PRG2Assignment
             }
         }
 
-
         static void DisplayAirlineFlights(Terminal terminal)
         {
             /*
@@ -646,13 +585,12 @@ namespace S10266136_PRG2Assignment
                         }
                     }
 
-                    //Console.WriteLine($"{flight.FlightNumber,-15} {airline.Name,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCodes[flightNumber],-25} {boardingGateName,-20}");
                     string specialRequestCode = terminal.Flights[flight.FlightNumber].GetType().Name.Substring(0, 4);
 
-                    // If there's no special request in the CSV (empty field), set it to "N/A"
+                    // If special code is norm, set it to "None"
                     if (string.IsNullOrEmpty(specialRequestCode) || specialRequestCode == "NORM")
                     {
-                        specialRequestCode = "N/A";
+                        specialRequestCode = "None";
                     }
 
                     Console.WriteLine($"{flight.FlightNumber,-15} {airline.Name,-22} {flight.Origin,-22} {flight.Destination,-22} {flight.ExpectedTime,-35} {specialRequestCode,-25} {boardingGateName,-20}");
@@ -661,7 +599,6 @@ namespace S10266136_PRG2Assignment
             }
 
         }
-
 
         static void ModifyFlightDetails(Terminal terminal)
         {
@@ -678,7 +615,6 @@ namespace S10266136_PRG2Assignment
             {
                 Console.WriteLine($"{air.Code,-16}{air.Name}");
             }
-
 
             string airlineCode;
 
@@ -784,7 +720,7 @@ namespace S10266136_PRG2Assignment
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid input. Please key in an origin.");
+                                    Console.WriteLine("Invalid input. Please key in an origin such as Singapore (SIN).");
                                 }
                             }
                             while (true)
@@ -801,28 +737,32 @@ namespace S10266136_PRG2Assignment
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid input. Please key in a destination.");
+                                    Console.WriteLine("Invalid input. Please key in a destination such as Singapore (SIN).");
                                 }
                             }
                             while (true)
                             {
-                                Console.Write("Enter New Expected Departure/Arrival Time (d/M/yyyy h:mm:ss tt): ");
+                                Console.Write("Enter New Expected Departure/Arrival Time (dd/MM/yyyy HH:mm): ");
                                 string newTime = Console.ReadLine()?.Trim();
 
-                                if (DateTime.TryParseExact(newTime.Trim(), "d/M/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out DateTime newExpectedTime))
+                                if (DateTime.TryParseExact(newTime, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out DateTime newExpectedTime))
                                 {
+                                    // convert to format: "dd/M/yyyy hh:mm:ss tt"
+                                    string formattedTime = newExpectedTime.ToString("d/M/yyyy hh:mm:ss tt");
+
                                     selectedFlight.Origin = newOrigin;
                                     selectedFlight.Destination = newDestination;
                                     selectedFlight.ExpectedTime = newExpectedTime;
+
                                     Console.WriteLine("Flight updated!");
                                     break;
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid date format. Please use d/M/yyyy h:mm:ss tt.");
+                                    Console.WriteLine("Invalid date format. Please use dd/MM/yyyy HH:mm such as 13/1/2025 16:30.");
                                 }
                             }
-                            break; // Add break statement to prevent fall-through
+                            break;
 
                         case 2:
                             // Modify Status
@@ -830,6 +770,11 @@ namespace S10266136_PRG2Assignment
                             {
                                 Console.Write("Enter New Status: ");
                                 string newStatus = Console.ReadLine()?.Trim();
+
+                                // Convert to Title Case (First letter of each word capitalized)
+                                TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+                                newStatus = textInfo.ToTitleCase(newStatus.ToLower());
+
                                 selectedFlight.Status = string.IsNullOrEmpty(newStatus) ? "Scheduled" : newStatus;
 
                                 if (newStatus == "Delayed" || newStatus == "Boarding" || newStatus == "On Time")
@@ -849,8 +794,7 @@ namespace S10266136_PRG2Assignment
                             while (true)
                             {
                                 Console.Write("Enter New Special Request Code: ");
-                                string newSpecialRequest = Console.ReadLine()?.Trim();
-                                //specialRequestCodes[flightNumber] = newSpecialRequest;
+                                string newSpecialRequest = Console.ReadLine()?.Trim().ToUpper();
 
                                 // Update the special request code by creating a new flight object with the updated code
                                 Flight oldFlight = terminal.Flights[flightNumber];
@@ -864,24 +808,20 @@ namespace S10266136_PRG2Assignment
 
                                 terminal.Flights[flightNumber] = newFlight;
 
-
-
-
-                                if (newSpecialRequest == "DDJB" || newSpecialRequest == "CFFT" || newSpecialRequest == "LWTT")
+                                if (newSpecialRequest == "DDJB" || newSpecialRequest == "CFFT" || newSpecialRequest == "LWTT" || newSpecialRequest == "NORM")
                                 {
                                     Console.WriteLine("Special Request updated successfully!");
                                     break;
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid special request. Please enter either 'DDJB', 'CFFT', or 'LWTT'.");
+                                    Console.WriteLine("Invalid special request. Please enter either 'NORM', 'DDJB', 'CFFT', or 'LWTT'.");
                                 }
                             }
                             break;
 
                         case 4:
                             // Modify Boarding Gate
-
                             string newBoardingGate;
 
                             while (true)
@@ -897,7 +837,7 @@ namespace S10266136_PRG2Assignment
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Invalid input. Please key in a boarding gate.");
+                                    Console.WriteLine("Invalid input. Please key in a boarding gate such as C20.");
                                 }
                             }
                             break;
@@ -930,7 +870,7 @@ namespace S10266136_PRG2Assignment
                     break;
             }
 
-            // Display updated flight details      // Special Request Code: {specialRequestCodes[flight.FlightNumber]}
+            // Display updated flight details      
             foreach (var flight in airline.Flights.Values)
             {
                 if (flight.FlightNumber == flightNumber)
@@ -954,7 +894,6 @@ namespace S10266136_PRG2Assignment
             /*
              * Written by Theresa
              */
-
             // Default boarding gate if not found
             string boardingGateName = "Unassigned";
 
@@ -975,7 +914,6 @@ namespace S10266136_PRG2Assignment
                     break; // Exit loop once the flight is found
                 }
             }
-
             // Return the boarding gate name (or "Unassigned" if not found)
             return boardingGateName;
         }
@@ -1289,11 +1227,6 @@ namespace S10266136_PRG2Assignment
                 string specialRequestCode = terminal.Flights[currentFlight.FlightNumber].GetType().Name.Substring(0, 4);
                 assignedGate = availableGates.FirstOrDefault(g => SupportsSpecialRequest(g, specialRequestCode));
 
-                //if (specialRequestCodes.TryGetValue(currentFlight.FlightNumber, out string specialRequestCode))
-                //{
-                //    assignedGate = availableGates.FirstOrDefault(g => SupportsSpecialRequest(g, specialRequestCode));
-                //}
-
                 // If no special request match, assign any available gate
                 if (assignedGate == null)
                 {
@@ -1315,7 +1248,9 @@ namespace S10266136_PRG2Assignment
             }
 
             // Step 5: Display updated flight details
-            Console.WriteLine("\nUpdated Flight Details:");
+            Console.WriteLine();
+            Console.WriteLine("Updated Flight Details:");
+            Console.WriteLine();
             Console.WriteLine($"{"Flight Number",-15} {"Airline Name",-22} {"Origin",-22} {"Destination",-22} {"Expected Departure/Arrival Time",-35} {"Special Request Code",-25} {"Boarding Gate",-15}");
 
             foreach (var flight in newlyAssignedFlights)
@@ -1335,13 +1270,17 @@ namespace S10266136_PRG2Assignment
             int remainingUnassignedFlights = flightQueue.Count; // Remaining flights w/o gates
             int remainingUnassignedGates = availableGates.Count; // Remaining unassigned gates
 
-            Console.WriteLine("\nProcessing Summary:");
+            Console.WriteLine();
+            Console.WriteLine("=============================================");
+            Console.WriteLine("Processing Summary");
+            Console.WriteLine("=============================================");
             Console.WriteLine($"Total Flights Assigned: {assignedFlights}");
             Console.WriteLine($"Total Boarding Gates Assigned: {assignedGates}");
             Console.WriteLine($"Remaining Flights without Boarding Gates: {remainingUnassignedFlights}");
             Console.WriteLine($"Remaining Boarding Gates without Flights: {remainingUnassignedGates}");
-            Console.WriteLine($"Percentage of Flights Assigned Automatically: {(assignedFlights > 0 ? (autoAssignedFlights * 100 / assignedFlights) : 0)}%");
-            Console.WriteLine($"Percentage of Boarding Gates Assigned Automatically: {(assignedGates > 0 ? (autoAssignedGates * 100 / assignedGates) : 0)}%");
+            Console.WriteLine($"Percentage of Flights Assigned Automatically: {(unassignedFlights > 0 ? (assignedFlights * 100 / unassignedFlights) : 0)}%");
+            Console.WriteLine($"Percentage of Boarding Gates Assigned Automatically: {(availableGateCount > 0 ? (assignedGates * 100 / availableGateCount) : 0)}%");
+
         }
 
         static bool SupportsSpecialRequest(BoardingGate gate, string specialRequestCode)
@@ -1360,6 +1299,3 @@ namespace S10266136_PRG2Assignment
 
     }
 }
-
-
-
